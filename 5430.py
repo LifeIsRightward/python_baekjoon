@@ -1,19 +1,30 @@
 from collections import deque
 import sys
 
-
 def process():
+      is_reversed = False
       for cmd in p:
           if cmd == 'D':
               if len(arr) == 0:
                   print("error")
                   return  # 함수 종료 = 다음 테스트 케이스로
               else:
-                  arr.popleft()
-          elif cmd == 'R':
-              reversed(arr)
+                  if is_reversed == False :
+                    arr.popleft()
 
-      print(list(arr))
+                  else: 
+                      arr.pop()    
+                  
+          elif cmd == 'R':
+              is_reversed = not is_reversed
+
+            
+      if is_reversed == False :
+          print('[' + ','.join(map(str, arr)) + ']')
+          
+      else:
+          arr.reverse()
+          print('[' + ','.join(map(str, arr)) + ']')
 
 # 전체 테스트 케이스 수
 tc = int(sys.stdin.readline())
