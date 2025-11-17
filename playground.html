@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>KNSTB02 - CVE Analysis (Extended)</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 16px; background:#f9f9f9; color:#222; }
+  .header { text-align:center; margin-bottom:8px; }
+  .header img { height:50px; vertical-align:middle; }
+  h1 { color:#004a99; margin:6px 0 8px 0; font-size:22px; }
+  h2 { color:#333; margin-top:12px; font-size:16px; text-align:left; }
+  table { border-collapse:collapse; width:98%; margin:10px auto; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.06); table-layout:fixed; }
+  th,td { border:1px solid #ccc; padding:8px; text-align:left; vertical-align:top; word-wrap:break-word; }
+  th { background:#004a99; color:#fff; text-transform:uppercase; font-size:12px; }
+  a { color:#004a99; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .status-critical { color:red; font-weight:bold; }
+  .status-high { color:orange; font-weight:bold; }
+  .status-medium { color:#bf8b00; font-weight:bold; }
+  .status-low { color:green; font-weight:bold; }
+  .status-unknown { color:#455a64; font-weight:700; }
+  .meta { font-size:12px; color:#444; margin:6px auto; width:98%; }
+  .note { font-size:12px; color:#555; margin-top:6px; }
+  /* column sizing */
+  colgroup col:nth-child(1) { width:14%; }
+  colgroup col:nth-child(2) { width:20%; }
+  colgroup col:nth-child(3) { width:12%; }
+  colgroup col:nth-child(4) { width:40%; }
+  colgroup col:nth-child(5) { width:14%; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img alt="logo" src="https://cdnmedia.eurofins.com/corporate-eurofins/media/1004/logo.png"/>
+  <h1>PG2380G - Residual Vulnerability Assessment</h1>
+</div>
+
+<p class="meta">This document extends your uploaded CVE template and adds short analyses for the listed CVEs. Original template used as a base. :contentReference[oaicite:1]{index=1}</p>
+
+<h2>Added CVE Analyses — Summary</h2>
+<table>
+  <colgroup>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>CVE (NVD)</th>
+      <th>NVD Severity</th>
+      <th>Analysis / Remediation</th>
+      <th>Residual Risk / Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SSH transport (OpenSSH, Dropbear, etc.)</td>
+      <td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-48795" target="_blank">CVE-2023-48795</a></td>
+      <td class="status-unknown">See NVD</td>
+      <td>
+        Vulnerability in SSH transport extensions negotiation that can weaken integrity protections under specific handshake conditions. An attacker able to perform on-path interception could potentially affect confidentiality or integrity during the SSH handshake. Recommended actions: apply vendor patches or upstream fixes, restrict SSH access to trusted networks and management hosts, enable strict host-key and algorithm policies, and use network segmentation and firewall rules to reduce exposure.
+      </td>
+      <td>Risk is higher if the device is accessible from untrusted networks. Restricting SSH to management VLANs or VPN-only access significantly reduces exposure.</td>
+    </tr>
+
+    <tr>
+      <td>OpenSSL — X9.42 Diffie-Hellman handling</td>
+      <td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-5678" target="_blank">CVE-2023-5678</a></td>
+      <td class="status-low">LOW (Potential DoS)</td>
+      <td>
+        OpenSSL routines that generate or validate X9.42 DH parameters may perform very slowly or hang when given excessively large or specially-crafted parameter values, allowing a remote or local attacker to cause resource exhaustion or a Denial-of-Service. Recommended remediation: apply OpenSSL security patches, validate or reject untrusted DH parameters, and implement limits on acceptable parameter sizes/complexity where the application receives external parameters.
+      </td>
+      <td>If the application never accepts DH parameters from untrusted sources, risk is minimal. Services that parse external parameters or accept remote inputs should validate input size and complexity.</td>
+    </tr>
+
+    <tr>
+      <td>OpenSSL — PKCS#12 parsing</td>
+      <td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-0727" target="_blank">CVE-2024-0727</a></td>
+      <td class="status-low">LOW (Potential DoS)</td>
+      <td>
+        Vulnerability in PKCS#12 file parsing that can cause OpenSSL to crash (NULL dereference or similar) when presented with malformed PKCS#12 data, enabling a potential Denial-of-Service. Recommended mitigation: apply OpenSSL fixes, avoid parsing untrusted PKCS#12 files in privileged contexts, perform input validation and sandboxing for upload/parse flows, and restrict upload functionality that handles certificate bundles.
+      </td>
+      <td>Risk is low for systems that do not accept PKCS#12 files from untrusted sources. Systems with upload endpoints should isolate parsing to a sandboxed process.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 style="text-align:center; margin-top:16px;">References</h3>
+<table>
+  <thead><tr><th>CVE</th><th>Reference</th></tr></thead>
+  <tbody>
+    <tr><td>CVE-2023-48795</td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-48795" target="_blank">NVD: CVE-2023-48795</a></td></tr>
+    <tr><td>CVE-2023-5678</td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-5678" target="_blank">NVD: CVE-2023-5678</a></td></tr>
+    <tr><td>CVE-2024-0727</td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-0727" target="_blank">NVD: CVE-2024-0727</a></td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Short checklist / recommended actions:</strong>
+  <ol>
+    <li>Confirm vendor/project security advisories and apply official patches. Patching is the primary remediation.</li>
+    <li>Restrict network exposure for affected services (SSH, TLS-using services) using firewall rules and management VLANs.</li>
+    <li>Reject or sandbox untrusted inputs (DH parameters, PKCS#12 files, uploaded cert bundles).</li>
+    <li>Where possible, verify CVSS scores and patch priority from official advisories for precise scheduling.</li>
+  </ol>
+  <p>Note: For a complete, environment-specific risk decision you should review vendor patch notes, product SBOM, and version mappings.</p>
+</div>
+
+</body>
+</html>
