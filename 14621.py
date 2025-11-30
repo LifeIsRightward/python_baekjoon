@@ -60,7 +60,7 @@ for x, y, cost in edges :
         union(x, y)
         total_cost += cost
 
-if not check_all_connected(v) :
+if check_all_connected(v) :
     print(total_cost)
 else :
     print("-1")
